@@ -18,6 +18,7 @@ import com.code_intelligence.jazzer.api.FuzzedDataProvider;
 import org.jsoup.Jsoup;
 import org.jsoup.helper.ValidationException;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Entities;
 import org.jsoup.safety.Safelist;
 
 public class CleanerFuzzer {
@@ -47,7 +48,7 @@ public class CleanerFuzzer {
                     break;
                 case 2:
                     Document.OutputSettings outputSettings = new Document.OutputSettings();
-                    outputSettings.escapeMode(Document.OutputSettings.EscapeMode.xhtml);
+                    outputSettings.escapeMode(Entities.EscapeMode.xhtml);
                     Jsoup.clean(html, baseUri, safelist, outputSettings);
                     break;
                 case 3:

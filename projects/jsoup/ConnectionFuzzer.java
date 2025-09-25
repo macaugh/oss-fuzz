@@ -24,7 +24,14 @@ import java.net.MalformedURLException;
 public class ConnectionFuzzer {
     public static void fuzzerTestOneInput(FuzzedDataProvider data) {
         try {
-            String url = data.consumeString(200);
+            // Generate more realistic URLs to avoid MalformedURLException crashes
+            String baseUrl = data.pickValue(new String[]{
+                "https://example.com", "http://test.org", "https://localhost:8080",
+                "http://192.168.1.1", "https://sub.domain.com"
+            });
+            String path = data.consumeString(100);
+            String url = baseUrl + "/" + path.replaceAll("[^a-zA-Z0-9._/-]", "");
+
             String userAgent = data.consumeString(100);
             String referrer = data.consumeString(100);
             int timeout = data.consumeInt(1, 30000);

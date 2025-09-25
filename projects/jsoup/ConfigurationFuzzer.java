@@ -18,6 +18,7 @@ import com.code_intelligence.jazzer.api.FuzzedDataProvider;
 import org.jsoup.Jsoup;
 import org.jsoup.helper.ValidationException;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Entities;
 import org.jsoup.parser.Parser;
 import org.jsoup.parser.ParseSettings;
 
@@ -57,7 +58,7 @@ public class ConfigurationFuzzer {
                 outputSettings.indentAmount(data.consumeInt(0, 10));
             }
             if (data.consumeBoolean()) {
-                Document.OutputSettings.EscapeMode[] modes = Document.OutputSettings.EscapeMode.values();
+                Entities.EscapeMode[] modes = Entities.EscapeMode.values();
                 outputSettings.escapeMode(modes[data.consumeInt(0, modes.length - 1)]);
             }
             if (data.consumeBoolean()) {
