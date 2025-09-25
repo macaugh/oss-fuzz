@@ -20,7 +20,7 @@ RUN curl -L https://archive.apache.org/dist/maven/maven-3/3.6.3/binaries/apache-
     unzip maven.zip -d $SRC/maven && \
     rm -rf maven.zip
 
-ENV MVN $SRC/maven/apache-maven-3.6.3/bin/mvn
+ENV MVN=$SRC/maven/apache-maven-3.6.3/bin/mvn
 
 RUN git clone --depth 1 https://github.com/google/fuzzing && \
     cat fuzzing/dictionaries/html.dict \
