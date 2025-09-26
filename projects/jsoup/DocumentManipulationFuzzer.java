@@ -147,7 +147,7 @@ public class DocumentManipulationFuzzer {
                             Element elem = selected.first();
                             elem.parent();
                             elem.children();
-                            elem.siblings();
+                            elem.siblingElements();
                         }
                         break;
 
@@ -205,7 +205,7 @@ public class DocumentManipulationFuzzer {
                 }
             }
 
-        } catch (ValidationException | IndexOutOfBoundsException ignored) {
+        } catch (ValidationException | IndexOutOfBoundsException | org.jsoup.select.Selector.SelectorParseException ignored) {
         }
     }
 }

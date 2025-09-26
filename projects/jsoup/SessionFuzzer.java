@@ -87,7 +87,7 @@ public class SessionFuzzer {
                 request.request().url();
             }
 
-        } catch (ValidationException | IllegalArgumentException ignored) {
+        } catch (ValidationException ignored) {
         }
     }
 }
