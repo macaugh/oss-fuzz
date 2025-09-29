@@ -1,0 +1,9 @@
+[tools]
+python = "3.11"
+node = "20"
+java = "11"
+
+[env]
+# OSS-Fuzz specific environment
+OSS_FUZZ_ROOT = "{{config_root}}"
+PATH = "/Users/mcaughman/Projects/personal/tools/google-cloud-sdk/bin:$PATH"
