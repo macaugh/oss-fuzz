@@ -1,0 +1,72 @@
+version: '3.8'
+
+services:
+  # Monitor service checks for crashes and sends Discord alerts
+  monitor:
+    build:
+      context: .
+      dockerfile: Dockerfile.monitor
+    volumes:
+      - ./fuzzing-data:/fuzzing-data
+      - ./monitor:/app
+    environment:
+      - DISCORD_WEBHOOK_URL=${DISCORD_WEBHOOK_URL}
+      - CHECK_INTERVAL=60
+    restart: unless-stopped
+    depends_on:
+      - fuzzer-jsoup-1
+      - fuzzer-jsoup-2
+      - fuzzer-jsoup-3
+
+  # Fuzzer instances - add more as needed
+  fuzzer-jsoup-1:
+    image: gcr.io/oss-fuzz/jsoup
+    volumes:
+      - ./fuzzing-data/jsoup-1:/fuzzing-data
+      - ./scripts:/scripts:ro
+    command: ["/scripts/run-fuzzer.sh", "CleanerFuzzer"]
+    environment:
+      - FUZZER_NAME=CleanerFuzzer
+      - MAX_TIME_PER_RUN=3600
+    restart: unless-stopped
+    cpus: 1
+    mem_limit: 2g
+
+  fuzzer-jsoup-2:
+    image: gcr.io/oss-fuzz/jsoup
+    volumes:
+      - ./fuzzing-data/jsoup-2:/fuzzing-data
+      - ./scripts:/scripts:ro
+    command: ["/scripts/run-fuzzer.sh", "ParserFuzzer"]
+    environment:
+      - FUZZER_NAME=ParserFuzzer
+      - MAX_TIME_PER_RUN=3600
+    restart: unless-stopped
+    cpus: 1
+    mem_limit: 2g
+
+  fuzzer-jsoup-3:
+    image: gcr.io/oss-fuzz/jsoup
+    volumes:
+      - ./fuzzing-data/jsoup-3:/fuzzing-data
+      - ./scripts:/scripts:ro
+    command: ["/scripts/run-fuzzer.sh", "SafelistFuzzer"]
+    environment:
+      - FUZZER_NAME=SafelistFuzzer
+      - MAX_TIME_PER_RUN=3600
+    restart: unless-stopped
+    cpus: 1
+    mem_limit: 2g
+
+  # Optional: Prometheus for metrics
+  # prometheus:
+  #   image: prom/prometheus:latest
+  #   volumes:
+  #     - ./prometheus.yml:/etc/prometheus/prometheus.yml
+  #     - prometheus-data:/prometheus
+  #   ports:
+  #     - "9090:9090"
+  #   restart: unless-stopped
+
+# volumes:
+#   prometheus-data:
