@@ -58,6 +58,25 @@ services:
     cpus: 1
     mem_limit: 2g
 
+  # Daily introspector for coverage analysis
+  introspector:
+    image: gcr.io/oss-fuzz-base/base-runner
+    volumes:
+      - ./scripts:/scripts:ro
+      - ./introspector-reports:/reports
+      - ./fuzzing-data:/fuzzing-data:ro
+      - .:/src/oss-fuzz:ro
+    environment:
+      - PROJECT_NAME=jsoup
+      - DISCORD_WEBHOOK_URL=${DISCORD_WEBHOOK_URL}
+    command: >
+      sh -c "while true; do
+        /scripts/run-introspector.sh;
+        echo 'Next introspector run in 24 hours...';
+        sleep 86400;
+      done"
+    restart: unless-stopped
+
   # Optional: Prometheus for metrics
   # prometheus:
   #   image: prom/prometheus:latest

@@ -70,6 +70,9 @@ fuzzer-jsoup-X:
 
 # Stop all fuzzers
 ./stop-fuzzing.sh
+
+# Run introspector analysis manually
+./scripts/manual-introspector.sh jsoup
 ```
 
 ## Directory Structure
@@ -99,6 +102,7 @@ fuzzing-data/
 - Detailed crash reports with file previews
 - Periodic statistics in logs (every 10 minutes)
 - Deduplication of crashes by hash
+- Daily introspector reports for coverage analysis (sent to Discord)
 
 ### Resource Management
 - CPU and memory limits per fuzzer
@@ -160,6 +164,25 @@ When crashes are found, you'll receive:
 - Crash preview
 - Timestamp
 
+### Introspector Reports
+
+Daily introspector runs analyze code coverage and reachability:
+- Runs automatically every 24 hours
+- Reports saved to `introspector-reports/`
+- Summary posted to Discord with key metrics
+- Shows which code paths fuzzers are reaching
+
+To run manually:
+```bash
+./scripts/manual-introspector.sh jsoup
+```
+
+The report includes:
+- Function coverage statistics
+- Unreached code blocks
+- Complexity analysis
+- HTML visualization (open `introspector-reports/report-*/fuzz_report.html`)
+
 ### Manual Inspection
 
 ```bash
@@ -170,6 +193,9 @@ ls -lh fuzzing-data/*/crashes/
 docker run --rm -v $(pwd)/fuzzing-data/jsoup-1:/data \
   gcr.io/oss-fuzz/jsoup \
   /out/CleanerFuzzer /data/crashes/crash-xyz
+
+# View introspector reports
+ls -lh introspector-reports/
 ```
 
 ## Troubleshooting
